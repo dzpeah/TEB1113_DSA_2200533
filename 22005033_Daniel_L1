@@ -1,0 +1,42 @@
+#include <iostream>
+using namespace std;
+
+struct Student {
+    int id;
+    string name;
+    int phone;
+    string email;
+};
+
+int main() {
+    Student student[5];
+    
+    for (int i = 0; i < 5; i++) {
+        cout << "Student id: ";
+        cin >> student[i].id;
+        
+        cin.ignore(); // Clear newline left in input buffer
+
+        cout << "Student name: ";
+        getline(cin, student[i].name);
+
+        cout << "Student phone: ";
+        cin >> student[i].phone;
+
+        cin.ignore(); // Clear newline again
+
+        cout << "Student email: ";
+        getline(cin, student[i].email);
+    }
+
+    cout << "\n--- Student Records ---\n\n";
+
+    for (int j = 0; j < 5; j++) {
+        cout << "Student's ID: " << student[j].id << "\n";
+        cout << "Name: " << student[j].name << "\n";
+        cout << "Phone: " << student[j].phone << "\n";
+        cout << "Email: " << student[j].email << "\n\n";
+    }
+
+    return 0;
+}
