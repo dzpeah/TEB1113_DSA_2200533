@@ -1,0 +1,138 @@
+#include <iostream>
+using namespace std;
+
+class Node {
+public:
+    string name;
+    Node* next;
+    Node* prev;
+
+    Node(string name) {
+        this->name = name;
+        this->next = nullptr;
+        this->prev = nullptr;
+    }
+};
+
+class CircularDoublyLinkedList {
+private:
+    Node* head;
+    Node* tail;
+
+public:
+    CircularDoublyLinkedList() {
+        head = nullptr;
+        tail = nullptr;
+    }
+
+    void insert_node(Node* new_node) {
+        if (head == nullptr) {
+            head = tail = new_node;
+            head->next = head;
+            head->prev = head;
+        } else {
+            new_node->prev = tail;
+            new_node->next = head;
+            tail->next = new_node;
+            head->prev = new_node;
+            tail = new_node;
+        }
+    }
+
+    void delete_node(Node* target) {
+        if (head == nullptr or target == nullptr) return;
+
+        if (head == target and head == tail) {
+            delete target;
+            head = tail = nullptr;
+            return;
+        }
+
+        if (target == head) {
+            head = head->next;
+            head->prev = tail;
+            tail->next = head;
+        } else if (target == tail) {
+            tail = tail->prev;
+            tail->next = head;
+            head->prev = tail;
+        } else {
+            target->prev->next = target->next;
+            target->next->prev = target->prev;
+        }
+
+        delete target;
+    }
+
+    void display_list() {
+        if (head == nullptr) {
+            cout << "List is empty." << endl;
+            return;
+        }
+
+        Node* curr = head;
+        bool printed_head_twice = false;
+
+        while (!printed_head_twice) {
+            cout << curr->name << " <-> ";
+            curr = curr->next;
+
+            if (curr == head) {
+                if (printed_head_twice) break; 
+                printed_head_twice = true;
+            }
+        }
+
+        cout << head->name << " (back to head)" << endl;
+    }
+
+    void display_list_reverse() {
+        if (tail == nullptr) {
+            cout << "List is empty." << endl;
+            return;
+        }
+
+        Node* curr = tail;
+        bool printed_tail_twice = false;
+
+        while (!printed_tail_twice) {
+            cout << curr->name << " <-> ";
+            curr = curr->prev;
+
+            if (curr == tail) {
+                if (printed_tail_twice) break; 
+                printed_tail_twice = true;
+            }
+        }
+
+        cout << tail->name << " (back to tail)" << endl;
+    }
+};
+
+int main() {
+    Node* node1 = new Node("Ali");
+    Node* node2 = new Node("Alice");
+    Node* node3 = new Node("Ahmed");
+    Node* node4 = new Node("Hamzah");
+
+    CircularDoublyLinkedList std_names;
+
+    std_names.insert_node(node1);
+    std_names.insert_node(node2);
+    std_names.insert_node(node3);
+    std_names.insert_node(node4);
+
+    cout << "Before deleting:\n";
+    std_names.display_list();
+    cout << "Reverse order:\n";
+    std_names.display_list_reverse();
+
+    std_names.delete_node(node2); 
+
+    cout << "\nAfter deleting:\n";
+    std_names.display_list();
+    cout << "Reverse order:\n";
+    std_names.display_list_reverse();
+
+    return 0;
+}
