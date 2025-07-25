@@ -1,0 +1,43 @@
+function binarySearch(arr, target) {
+  let sorted = [...arr].sort((a, b) => a - b);
+  let low = 0, high = sorted.length - 1, steps = 0;
+  let output = '';
+  let found = false;
+  let stepsLog = '';
+
+  while (low <= high) {
+    let mid = Math.floor((low + high) / 2);
+    steps++;
+    output = sorted.map((val, i) => 
+      `<span class="highlight" style="${i === mid ? 'background:#55efc4' : ''}">${val}</span>`
+    ).join('');
+
+    stepsLog += `Step ${steps}: Compare ${target} with middle value ${sorted[mid]}\n`;
+
+    if (sorted[mid] === target) {
+      stepsLog += `✅ Found ${target} at index ${mid} (in sorted array)\n`;
+      found = true;
+      break;
+    } else if (sorted[mid] < target) {
+      stepsLog += `${target} > ${sorted[mid]} → Search Right\n`;
+      low = mid + 1;
+    } else {
+      stepsLog += `${target} < ${sorted[mid]} → Search Left\n`;
+      high = mid - 1;
+    }
+  }
+
+  if (!found) stepsLog += `❌ ${target} not found in the scores`;
+
+  document.getElementById("binaryOutput").innerHTML = `
+    ${output}<br><br>
+    <div class="details">
+      📊 Steps: ${steps}<br>
+      ⏱ Time: ~${(steps * 0.001).toFixed(3)} ms<br>
+      💾 Space Complexity: O(log n)<br>
+      ⏰ Time Complexity: O(log n)<br>
+      🔎 Result: <strong>${found ? "Found ✅" : "Not Found ❌"}</strong>
+    </div>
+    <div class="steps-log"><strong>📋 Operation Steps:</strong>\n${stepsLog}</div>
+  `;
+}
